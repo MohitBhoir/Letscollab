@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../components/loading'
@@ -36,6 +36,10 @@ const Login = () => {
             setIsLoading(false)
             localStorage.setItem('user',JSON.stringify(data))
             navigate("/")
+            window.location.reload()
+            setTimeout(()=>{
+                 window.stop()
+            },50)
        }else{
             setIsLoading(false)
             if(data.msg==="invalid credentials"){
