@@ -15,7 +15,7 @@ const Navbar = () => {
   return <>
   <nav className='flex bg-slate-400 bg-opacity-10  justify-between items-center p-3 shadow-xl '>
     <div>
-        <h1 className='font-extrabold text-black text-3xl font-sans'>{data?`Hello,${data.name}`:`TODO`}</h1>
+        <h1 className='font-extrabold text-black text-3xl font-sans'>TODO</h1>
     </div>
     <ul className='flex justify-evenly gap-5'>
     <Link to="/"><li className='text-black   text-xl  cursor-pointer'><FaHome 

@@ -17,3 +17,15 @@ form{
     justify-content: center;
     align-items: center;
 }
+.cont{
+     display: flex;
+     width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+article{
+    display: flex;
+     width: 100%;
+    justify-content: center;
+    align-items: center;
+}
