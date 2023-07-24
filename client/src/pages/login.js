@@ -7,10 +7,11 @@ const Login = () => {
   const [formData,setFormData]=useState({
     email:'',
     password:'',
+    userType:'',
   })
   const [isLoading,setIsLoading]=useState(false)
   const navigate=useNavigate()
-  const {email,password}=formData
+  const {email,password,userType}=formData
 
   const handleChange=(e)=>{
     setFormData((prevState)=>({
@@ -28,14 +29,14 @@ const Login = () => {
               "Authorization":"",
               "Content-Type":"application/json"
            },
-           body:JSON.stringify({email:email,password:password})
+           body:JSON.stringify({email:email,password:password,userType:userType})
         })
         const data=await res.json()
         if(res.ok){
             toast.success("login successfully")
             setIsLoading(false)
             localStorage.setItem('user',JSON.stringify(data))
-            navigate("/")
+            navigate("/adDash")
             window.location.reload()
             setTimeout(()=>{
                  window.stop()
@@ -59,6 +60,9 @@ const Login = () => {
      {isLoading?<Loading/>:<form className='shadow-2xl rounded-md  m-8 p-4' onSubmit={handleSubmit}>
         <div className='flex gap-6 justify-evenly'>
           <input type="email" id="email" name="email" value={email} placeholder="Enter your email" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
+        </div>
+        <div className='flex gap-6 justify-evenly'>
+          <input type="userType" id="userType" name="userType" value={userType} placeholder="type: admin/student" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
         </div>
         <div className='flex gap-6 justify-evenly'>
           <input type="password" id="password" name="password" value={password} placeholder="Enter password" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>

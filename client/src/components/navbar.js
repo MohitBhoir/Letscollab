@@ -24,16 +24,16 @@ const Navbar = () => {
     {
       data?
 
-      <Link to="/login"><li className='text-black   text-xl  cursor-pointer'><FaSignOutAlt
+      <Link to="/login" className='text-black   text-xl  cursor-pointer'><FaSignOutAlt
       className='hover:text-white hover:bg-black p-2 
-      rounded-md duration-200' size={40} onClick={logout} />Logout</li></Link>
+      rounded-md duration-200' size={40} onClick={logout} />Logout</Link>
 
       :
       
       <>
-          <Link to="/login"><li className='text-black   text-xl  cursor-pointer'><FaSignInAlt 
+          <Link to="/login"className='text-black   text-xl  cursor-pointer'><FaSignInAlt 
           className='hover:text-white hover:bg-black p-2 
-          rounded-md duration-200' size={40} />Login</li></Link>
+          rounded-md duration-200' size={40} />Login</Link>
           <Link to="/register"><li className='text-black 
           transition-all text-xl  cursor-pointer'><FaUser size={40} 
           className='hover:text-white hover:bg-black p-2 

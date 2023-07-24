@@ -7,13 +7,14 @@ const Register = () => {
   const [formData,setFormData]=useState({
     name:'',
     email:'',
+    userType:'',
     password:'',
     password2:'',
   })
   const [isLoading,setIsLoading]=useState(false)
   const navigate=useNavigate()
 
-  const {name,email,password,password2}=formData
+  const {name,email,userType,password,password2}=formData
 
   
   const handleChange=(e)=>{
@@ -35,7 +36,7 @@ const Register = () => {
                   "Authorization":"",
                   "Content-Type": "application/json"
               },
-              body: JSON.stringify({name:name,email:email,password:password})
+              body: JSON.stringify({name:name,email:email,userType:userType,password:password})
           })
           const data = await res.json()
           if(res.ok){
@@ -69,6 +70,9 @@ const Register = () => {
         </div>
         <div className='flex gap-6 justify-evenly'>
           <input type="email" id="email" name="email" value={email} placeholder="Enter your email" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
+        </div>
+        <div className='flex gap-6 justify-evenly'>
+          <input type="userType" id="userType" name="userType" value={userType} placeholder="type: admin/student" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
         </div>
         <div className='flex gap-6 justify-evenly'>
           <input type="password" id="password" name="password" value={password} placeholder="Enter password" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
