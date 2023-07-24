@@ -4,9 +4,9 @@ const asyncHandler=require("express-async-handler")
 const User=require("../models/user")
 
 const registerUser=asyncHandler(async(req,res)=>{
-    const {name,email,password}=req.body
+    const {name,email,password,userType}=req.body
 
-    if(!email || !name || !password){
+    if(!email || !name || !password || !userType){
         res.status(400)
         throw new Error("please fill all the details")
     }
@@ -24,7 +24,8 @@ const registerUser=asyncHandler(async(req,res)=>{
     const user=await User.create({
         name:name,
         email:email,
-        password:hashedPassword
+        password:hashedPassword,
+        userType:userType,
     })
 
     if(user){
@@ -32,6 +33,7 @@ const registerUser=asyncHandler(async(req,res)=>{
             _id:user.id,
             name:user.name,
             email:user.email,
+            userType:user.userType,
             token:generateToken(user._id)
         })
     }else{
@@ -41,8 +43,12 @@ const registerUser=asyncHandler(async(req,res)=>{
 })
 
 const loginUser=asyncHandler(async(req,res)=>{
-    const {email,password}=req.body
+    const {email,password,userType}=req.body
     
+    if(!email || !password || !userType){
+         res.status(400)
+         throw new Error("please enter all the fields")
+    }
     const user=await User.findOne({email})
     
     // compare password 
@@ -51,6 +57,7 @@ const loginUser=asyncHandler(async(req,res)=>{
                 _id:user.id,
                 name:user.name,
                 email:user.email,
+                userType:user.userType,
                 token:generateToken(user._id)
             })
     }else{

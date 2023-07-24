@@ -17,7 +17,7 @@ app.use(cors({
     origin: "http://localhost:3000"
 }))
 
-app.use("/api",require("./routes/random"))
+app.use("/api/admin",require("./routes/admin"))
 app.use("/api/users",require("./routes/user"))
 
 app.use(errorHandler)
