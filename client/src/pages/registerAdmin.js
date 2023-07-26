@@ -3,18 +3,17 @@ import {useNavigate} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import Loading from '../components/loading'
 
-const Register = () => {
+const RegisterAdmin = () => {
   const [formData,setFormData]=useState({
     name:'',
     email:'',
-    userType:'',
     password:'',
     password2:'',
   })
   const [isLoading,setIsLoading]=useState(false)
   const navigate=useNavigate()
 
-  const {name,email,userType,password,password2}=formData
+  const {name,email,password,password2}=formData
 
   
   const handleChange=(e)=>{
@@ -36,7 +35,7 @@ const Register = () => {
                   "Authorization":"",
                   "Content-Type": "application/json"
               },
-              body: JSON.stringify({name:name,email:email,userType:userType,password:password})
+              body: JSON.stringify({name:name,email:email,password:password})
           })
           const data = await res.json()
           if(res.ok){
@@ -50,7 +49,6 @@ const Register = () => {
              }else{
                 toast.error("sorry,some unexpected error occured!")
              }
-             navigate("/")
           }
         }
   }
@@ -61,7 +59,7 @@ const Register = () => {
   return <>
    <div className='flex gap-5 justify-center items-center'>
      <p>don't have an account?</p>
-     <h1 className='font-extrabold text-3xl'>Register</h1>
+     <h1 className='font-extrabold text-3xl text-emerald-600 '>Register Admin</h1>
    </div>
      {isLoading?<Loading/>:<form className='shadow-2xl rounded-md  m-8 p-4' onSubmit={handleSubmit}>
         <div  className='flex gap-6 justify-evenly'>
@@ -72,16 +70,13 @@ const Register = () => {
           <input type="email" id="email" name="email" value={email} placeholder="Enter your email" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
         </div>
         <div className='flex gap-6 justify-evenly'>
-          <input type="userType" id="userType" name="userType" value={userType} placeholder="type: admin/student" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
-        </div>
-        <div className='flex gap-6 justify-evenly'>
           <input type="password" id="password" name="password" value={password} placeholder="Enter password" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
         </div>
         <div className='flex gap-6 justify-evenly'>
           <input type="password" id="password2" name="password2" value={password2} placeholder="confirm password" className='p-4 border-black border-2 rounded-md' onChange={handleChange}/>
         </div>
         <div className='flex justify-center items-center'>
-          <button type="submit" className='p-2 text-white bg-black
+          <button type="submit" className='p-2 text-white bg-emerald-600 
            hover:text-black hover:bg-slate-400
           duration-100 rounded-md hover:p-3'>Submit</button>
         </div>
@@ -89,4 +84,4 @@ const Register = () => {
   </>
 }
 
-export default Register
+export default RegisterAdmin

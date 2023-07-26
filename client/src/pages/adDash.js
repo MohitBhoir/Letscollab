@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import create from './create.json'
+import Lottie from 'lottie-react'
+import Modal from "./Modal";
+
 
 const AdDash = () => {
+  const e=JSON.parse(localStorage.getItem('e'))
   const navigate = useNavigate();
+  const [showModal,setShowModal]=useState(false)
   const [formData, setFormData] = useState({
     category:"",
     image:"",
@@ -13,14 +19,16 @@ const AdDash = () => {
   });
 
   const { category,image,title, description } = formData;
-  const user = JSON.parse(localStorage.getItem("user"));
-  // const [todo, setTodo] = useState(null);
-  // const [open, setOpen] = useState(false);
-  // const [isEdit, setIsEdit] = useState(false);
+  const userAdmin = JSON.parse(localStorage.getItem("userAdmin"));
+  const [isEdit, setIsEdit] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    createUser();
+  const handleSubmit = (E) => {
+    E.preventDefault();
+    if(e){
+      updateUser()
+    }else{
+      createUser()
+    }
   };
 
   const handleChange = (e) => {
@@ -52,147 +60,102 @@ const AdDash = () => {
     }
   })
 }
-  // const fetchUser = async () => {
-  //   try {
-  //     const res = await fetch("/api", {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (data) {
-  //       setTodo(data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const createUser = async () => {
     try {
       const res = await fetch("/api/admin", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${userAdmin.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ category:category,title: title, description: description,image:image }),
       });
 
       const data = await res.json();
-      if (data) {
-        toast.success("task added successfully");
+      if (res.ok) {
+        toast.success("profile added successfully");
+        navigate('/')
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("oops!some error occured");
+    }
+  };
+
+  const updateUser = async () => {
+    try {
+      const res = await fetch(`/api/admin/${e.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${userAdmin.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ category:category,title: title, description: description,image:image }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("profile edited successfully");
+        localStorage.removeItem('e')
+        navigate('/')
+      }else{
+         toast.error("user not authorized")
+         navigate("/")
       }
     } catch (error) {
       toast.error("oops!some error occured");
     }
   };
-
-  // const deleteUser = async (id) => {
-  //   try {
-  //     const res = await fetch(`/api/${id}`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ title: title, description: description }),
-  //     });
-
-  //     const data = await res.json();
-  //     if (data) {
-  //       toast.success("task deleted successfully");
-  //     }
-  //   } catch (error) {
-  //     toast.error("oops!some error occured");
-  //   }
-  // };
-
-  // const showTask = () => {
-  //   setOpen(!open);
-  // };
-
-  // const del = (id) => {
-  //   deleteUser(id);
-  // };
-  // useEffect(() => {
-  //   if (user) {
-  //     fetchUser();
-  //   }
-  // }, [user]);
-
   useEffect(() => {
-    if (!user) {
+    if (!userAdmin) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [userAdmin, navigate]);
 
+  useEffect(()=>{
+      if(e){
+        setFormData({category:e.category,image:e.image,title:e.title,description:e.description})
+        setIsEdit(true)
+      }
+  },[])
   return (
     <>
       <div className="flex-col cont gap-5 justify-center items-center my-2">
         <h1 className="font-extrabold text-3xl">
-          {user ? `Hi,${user.name} you can start creating` : ``}
+          {userAdmin ? `Hey,${userAdmin.name} you can start creating` : ``}
         </h1>
-        {/* {open ? (
-          <div>
-            {todo.data !== null ? (
-              todo.data.map((d) => {
-                const { title, description, _id, createdAt } = d;
-                const create = createdAt.toString().split("T")[0];
-                return (
-                  <article
-                    className="flex-col justify-center 
-                items-center rounded-md h-[100px] p-4 shadow-2xl my-4"
-                  >
-                    <h1 className="font-bold text-2xl">{title}</h1>
-                    <p>{description}</p>
-                    <p>{create}</p>
-                    <div className="flex gap-[1rem] p-4">
-                      <button className="text-red-600">
-                        <FaTrash size={20} onClick={() => del(_id)} />
-                      </button>
-                    </div>
-                  </article>
-                );
-              })
-            ) : (
-              <h1 className="text-2xl text-center">
-                oops!you haven't set any task yet
-              </h1>
-            )}
-          </div>
-        ) : ( */}
-          <div className="flex-col cont gap-5 justify-center items-center my-2">
-            {/* <h1 className="text-xl font-bold">
-              {isEdit ? "Edit Task" : "Add Task"}
-            </h1> */}
+          <div className="flex p-0 gap-5 justify-between items-center">
             <form
-              className="shadow-2xl rounded-md  m-8 p-4"
+              className="shadow-2xl rounded-md  m-8 p-4 w-[600px]"
               onSubmit={handleSubmit}
             >
-              <div className="flex gap-6 justify-evenly">
-               <label htmlFor="file-upload">
-              </label>
-
-              <input 
-                type="file"
+            
+<div className="flex items-center justify-center w-full">
+    <label for="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+        {e && e.image?<img src={e.image} alt="" className="w-[100%] h-[100%]"
+        />:<div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+            </svg>
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
+              Click to upload</span> or drag and drop</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG </p>
+        </div>}
+        <input id="dropzone-file" type="file" className="hidden"
                 name="image"
-                id='image'
                 accept='.jpeg, .png, .jpg'
-                onChange={handleFileUpload}
-              />
-            </div>
+                onChange={handleFileUpload} />
+    </label>
+</div> 
+
               <div className="flex gap-6 justify-evenly">
+                <h1 className="font-bold ">school / college / university</h1>
                 <input
                   type="text"
                   id="category"
                   name="category"
                   value={category}
-                  placeholder="Enter category :- school / college / university / institute"
+                  placeholder="category"
                   className="p-4 border-black border-2 rounded-md"
                   onChange={handleChange}
                 />
@@ -208,7 +171,7 @@ const AdDash = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="flex gap-6 justify-evenly">
+              <div className="flex gap-6 justify-between">
                 <input
                   type="text"
                   id="description"
@@ -227,10 +190,17 @@ const AdDash = () => {
             hover:text-black hover:bg-slate-400
            duration-100 rounded-md hover:p-3"
                 >
-                  Submit
+                  {e?'edit':'add'}
                 </button>
               </div>
             </form>
+            
+            <div>
+                <div>
+                  {isEdit?<Modal name={e.name}/>:<></>}
+                </div>
+                <Lottie animationData={create} className='w-[500px] h-[500px]'/>
+            </div>
           </div>
       </div>
     </>
