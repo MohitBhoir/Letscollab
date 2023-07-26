@@ -5,8 +5,7 @@ const router=express.Router()
 
 const authMiddleware=require("../middleware/auth")
 
-router.route("/").get(getDetails).post(authMiddleware,createDetails)
+router.route("/").post(authMiddleware,createDetails).get(getDetails)
 router.route("/:id").put(authMiddleware,updateDetails).delete(authMiddleware,deleteDetails)
-
 
 module.exports=router;

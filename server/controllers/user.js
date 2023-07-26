@@ -4,9 +4,9 @@ const asyncHandler=require("express-async-handler")
 const User=require("../models/user")
 
 const registerUser=asyncHandler(async(req,res)=>{
-    const {name,email,password,userType}=req.body
+    const {name,email,password}=req.body
 
-    if(!email || !name || !password || !userType){
+    if(!email || !name || !password ){
         res.status(400)
         throw new Error("please fill all the details")
     }
@@ -25,7 +25,6 @@ const registerUser=asyncHandler(async(req,res)=>{
         name:name,
         email:email,
         password:hashedPassword,
-        userType:userType,
     })
 
     if(user){
@@ -33,7 +32,6 @@ const registerUser=asyncHandler(async(req,res)=>{
             _id:user.id,
             name:user.name,
             email:user.email,
-            userType:user.userType,
             token:generateToken(user._id)
         })
     }else{
@@ -43,9 +41,9 @@ const registerUser=asyncHandler(async(req,res)=>{
 })
 
 const loginUser=asyncHandler(async(req,res)=>{
-    const {email,password,userType}=req.body
+    const {email,password}=req.body
     
-    if(!email || !password || !userType){
+    if(!email || !password){
          res.status(400)
          throw new Error("please enter all the fields")
     }
@@ -57,7 +55,6 @@ const loginUser=asyncHandler(async(req,res)=>{
                 _id:user.id,
                 name:user.name,
                 email:user.email,
-                userType:user.userType,
                 token:generateToken(user._id)
             })
     }else{

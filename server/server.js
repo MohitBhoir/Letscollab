@@ -19,6 +19,8 @@ app.use(cors({
 
 app.use("/api/admin",require("./routes/admin"))
 app.use("/api/users",require("./routes/user"))
+app.use("/api/events",require("./routes/events"))
+app.use("/api/interest",require("./routes/interest"))
 
 app.use(errorHandler)
 
