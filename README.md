@@ -1,8 +1,5 @@
 
 ## **Let's Collab**
-<div align="center">
-  An app to setup and view profiles of different institutions for better reach
-</div>
 
 
 #Description
